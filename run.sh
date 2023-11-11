@@ -1,7 +1,10 @@
 #!/bin/bash
 
-DIRNAME="$(dirname "$0")"
-PORTAL_DIR="$(realpath "$DIRNAME")"/../Portal
+PORTAL_DIR=~/games/portal/Portal
+
+IM_VERSION=1.0
+
+IM=damian-barsotti/portal:$IM_VERSION
 
 if [ "$1" == "--pulse" ]
 then
@@ -17,14 +20,14 @@ daemon-binary = /bin/true
 enable-shm = false
 EOF
 
-nvidia-docker run -ti --rm -v /tmp/.X11-unix:/tmp/.X11-unix -v "$PORTAL_DIR:/usr/local/games/Portal" -e DISPLAY=unix:0\
+docker run --runtime=nvidia -ti --rm -v /tmp/.X11-unix:/tmp/.X11-unix -v "$PORTAL_DIR:/usr/local/games/Portal" -e DISPLAY=unix:0\
     --env PULSE_SERVER=unix:/tmp/pulseaudio.socket --env PULSE_COOKIE=/tmp/pulseaudio.cookie \
     --volume /tmp/pulseaudio.socket:/tmp/pulseaudio.socket --volume /tmp/pulseaudio.client.conf:/etc/pulse/client.conf\
-    --name portal damian/portal:1.0
+    --name portal $IM
 
 else
 
-exec nvidia-docker run -ti --rm -v /tmp/.X11-unix:/tmp/.X11-unix -v "$PORTAL_DIR:/usr/local/games/Portal" -e DISPLAY=unix:0\
-    --device /dev/snd --name portal damian/portal:1.0
+exec docker run --runtime=nvidia -ti --rm -v /tmp/.X11-unix:/tmp/.X11-unix -v "$PORTAL_DIR:/usr/local/games/Portal" -e DISPLAY=unix:0\
+    --device /dev/snd --name portal $IM
 
 fi

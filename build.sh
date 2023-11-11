@@ -3,11 +3,8 @@
 set -x
 
 IM_VERSION=1.0
-IM_BASE_VERSION=0.10.0
 
-IM=damian/portal:$IM_VERSION
-
-IM_BASE=apache/zeppelin:$IM_BASE_VERSION
+IM=damian-barsotti/portal:$IM_VERSION
 
 echoerr() { echo "$@" 1>&2; }
 
@@ -19,7 +16,7 @@ prog_exists() {
     fi
 }
 
-for prg in realpath docker grep nvidia-docker
+for prg in realpath docker grep nvidia-ctk
 do
     prog_exists $prg
 done
